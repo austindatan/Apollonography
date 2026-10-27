@@ -14,7 +14,6 @@
     "postinstall": "node scripts/patch-webview.js"
   },
   "dependencies": {
-    "@react-native/new-app-screen": "0.84.0",
     "nativewind": "^4.2.7",
     "react": "19.2.3",
     "react-native": "^0.84.1",

@@ -253,7 +253,7 @@ export const WysiwygEditor: React.FC<Props> = ({
     const json = JSON.stringify(enriched);
     // Allow large image data URLs (up to 50MB) while guarding against unbounded payloads
     if (json.length > 50 * 1024 * 1024) {
-      console.log('WysiwygEditor: Message payload exceeds 50MB limit, skipping.');
+      console.warn('[WysiwygEditor] Message payload exceeds 50MB limit, skipping.');
       return;
     }
     try {
@@ -426,13 +426,10 @@ export const WysiwygEditor: React.FC<Props> = ({
               };
               reader.readAsDataURL(blob);
             })
-            .catch(err => {
-              // Silently log without triggering yellow debugger warning banner
-              console.log('[WysiwygEditor] Could not resolve image base64:', err?.message || err);
+            .catch(() => {
+              // Silently swallow in background fetch fallback
             });
-        } catch (err) {
-          console.log('[WysiwygEditor] fetch exception for image base64:', err);
-        }
+        } catch {}
       }
     }
   }, [loadContent, syncEntities, openLightbox, sendMessage]);
@@ -550,7 +547,7 @@ export const WysiwygEditor: React.FC<Props> = ({
         handleCommand('insertImage', { src: srcToInsert });
       }
     } catch (err) {
-      console.log('[WysiwygEditor] pickImageFromComputer failed:', err);
+      console.error('[WysiwygEditor] pickImageFromComputer failed:', err);
     }
   }, [handleCommand]);
 
