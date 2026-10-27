@@ -231,6 +231,7 @@ export async function deleteProject(projectId: string): Promise<void> {
     await adapter.executeSql('DELETE FROM entries WHERE project_id = ?;', [projectId]);
     await adapter.executeSql('DELETE FROM categories WHERE project_id = ?;', [projectId]);
     await adapter.executeSql('DELETE FROM projects WHERE id = ?;', [projectId]);
+    try { await adapter.executeSql('PRAGMA wal_checkpoint(PASSIVE);'); } catch {}
     storageEvents.emit(STORAGE_EVENTS.PROJECTS_CHANGED, { projectId });
     storageEvents.emit(STORAGE_EVENTS.ENTRIES_CHANGED, { projectId });
   } catch (err) {
