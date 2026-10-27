@@ -123,7 +123,7 @@ export const EntryGalleryCard: React.FC<Props> = ({
 
   const shadowOffsetVal = popAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [4, 7],
+    outputRange: [3, 5],
   });
 
   return (
@@ -166,8 +166,8 @@ export const EntryGalleryCard: React.FC<Props> = ({
         />
 
         <View style={styles.cardBox}>
-          {/* Card Art: 180x180 square for Gameplay; 180x360 (1:2) for Cosmetics */}
-          <View style={[styles.artFrame, { height: isCosmetics ? 360 : 180 }]}>
+          {/* Card Art: 140x140 square for Gameplay; 140x280 (1:2) for Cosmetics */}
+          <View style={[styles.artFrame, { height: isCosmetics ? 280 : 140 }]}>
             {/* E0 Image */}
             <ImageFrame
               kind={isCosmetics ? 'gallery' : 'panel'}
@@ -217,7 +217,8 @@ export const EntryGalleryCard: React.FC<Props> = ({
                       fill={primaryTag.color || accentColor}
                       textColor={INK}
                       size="sm"
-                      style={{ paddingHorizontal: 6 }}
+                      style={{ paddingHorizontal: 5, paddingVertical: 1 }}
+                      textStyle={{ fontSize: 9 }}
                     />
                   );
                 }
@@ -229,14 +230,16 @@ export const EntryGalleryCard: React.FC<Props> = ({
                       fill={primaryTag.color || accentColor}
                       textColor={INK}
                       size="sm"
-                      style={{ marginRight: 4, paddingHorizontal: 6, flexShrink: primaryTag.name.length > 9 ? 1 : 0 }}
+                      style={{ marginRight: 3, paddingHorizontal: 5, paddingVertical: 1, flexShrink: primaryTag.name.length > 7 ? 1 : 0 }}
+                      textStyle={{ fontSize: 9 }}
                     />
                     <BrutalPill
                       label={secondaryTag.name}
                       fill={secondaryTag.color || CREAM}
                       textColor={INK}
                       size="sm"
-                      style={{ paddingHorizontal: 6, flexShrink: 1 }}
+                      style={{ paddingHorizontal: 5, paddingVertical: 1, flexShrink: 1 }}
+                      textStyle={{ fontSize: 9 }}
                     />
                   </>
                 );
@@ -251,11 +254,11 @@ export const EntryGalleryCard: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   cardOuter: {
-    width: 180,
-    marginBottom: 16,
-    marginHorizontal: 8,
-    paddingRight: 8,
-    paddingBottom: 8,
+    width: 140,
+    marginBottom: 12,
+    marginHorizontal: 4,
+    paddingRight: 6,
+    paddingBottom: 6,
   },
   hiddenPreload: {
     width: 1,
@@ -264,7 +267,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   pressableContainer: {
-    width: 180,
+    width: 140,
     position: 'relative',
   },
   shadowUnderlay: {
@@ -288,8 +291,8 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   artFrame: {
-    width: 180,
-    height: 360,
+    width: 140,
+    height: 280,
     backgroundColor: '#E5E7EB',
     alignItems: 'center',
     justifyContent: 'center',
@@ -297,17 +300,17 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   detailsContainer: {
-    padding: 8,
+    padding: 6,
     backgroundColor: WHITE,
     overflow: 'hidden',
   },
   titleText: {
     fontFamily: FONTS.display,
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '800',
     color: INK,
     letterSpacing: -0.2,
-    marginBottom: 4,
+    marginBottom: 3,
   },
   tagsRow: {
     flexDirection: 'row',

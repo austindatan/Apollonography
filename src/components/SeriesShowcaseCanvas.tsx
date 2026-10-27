@@ -326,7 +326,7 @@ export const SeriesShowcaseCanvas: React.FC<Props> = ({
               const wardrobeGallery = matchingWardrobe?.gallery;
               const cardImage = isCosmetics
                 ? (wardrobeGallery ?? unit.portrait ?? (unit as any).gallery ?? unit.thumbnail)
-                : (unit.portrait ?? unit.thumbnail);
+                : (unit.thumbnail ?? (unit as any).panel ?? unit.portrait);
 
               return (
                 <EntryGalleryCard

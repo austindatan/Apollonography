@@ -1667,8 +1667,8 @@ export const MainScreen: React.FC = () => {
               [1, 2, 3, 4].map(idx => (
                 <BrutalSkeleton
                   key={idx}
-                  width={180}
-                  height={project.type === 'cosmetics' ? 430 : 250}
+                  width={140}
+                  height={project.type === 'cosmetics' ? 340 : 200}
                   radius={RADIUS.card}
                 />
               ))
