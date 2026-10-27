@@ -7,6 +7,8 @@
 #include "AutolinkedNativeModules.g.h"
 
 #include "NativeModules.h"
+#include "FilePickerModule.h"
+#include "SQLiteModule.h"
 
 // A PackageProvider containing any turbo modules you define within this app project
 struct CompReactPackageProvider
@@ -70,8 +72,25 @@ _Use_decl_annotations_ int CALLBACK WinMain(HINSTANCE instance, HINSTANCE, PSTR 
 
   // Get the AppWindow so we can configure its initial title and size
   auto appWindow{reactNativeWin32App.AppWindow()};
-  appWindow.Title(L"apollonography");
+  appWindow.Title(L"Apollonography");
   appWindow.Resize({1000, 1000});
+
+  // Set the window titlebar and taskbar icon
+  HICON hIcon = (HICON)::LoadImageW(
+      instance,
+      MAKEINTRESOURCEW(IDI_ICON1),
+      IMAGE_ICON,
+      0,
+      0,
+      LR_DEFAULTSIZE | LR_SHARED);
+  if (hIcon) {
+    appWindow.SetIcon(winrt::Microsoft::UI::GetIconIdFromIcon(hIcon));
+  } else {
+    std::wstring iconPath = std::wstring(appDirectory).append(L"\\small.ico");
+    if (GetFileAttributesW(iconPath.c_str()) != INVALID_FILE_ATTRIBUTES) {
+      appWindow.SetIcon(iconPath.c_str());
+    }
+  }
 
   // Get the ReactViewOptions so we can set the initial RN component to load
   auto viewOptions{reactNativeWin32App.ReactViewOptions()};

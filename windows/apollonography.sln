@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "apollonography.Package", "apollonography.Package\apollonography.Package.wapproj", "{5DF56985-9FAB-4A86-99A5-C1A40CF74B2E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "apollonography", "apollonography\apollonography.vcxproj", "{69B0E0D9-22F0-4A25-8A27-FCB17528473D}"
+EndProject
+
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ReactNativeWebView", "..\node_modules\react-native-webview\windows\ReactNativeWebView\ReactNativeWebView.vcxproj", "{30CADFC7-80EF-4296-A405-47E4B97C0C71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +56,19 @@ Global
 		{69B0E0D9-22F0-4A25-8A27-FCB17528473D}.Release|ARM64.ActiveCfg = Release|ARM64
 		{69B0E0D9-22F0-4A25-8A27-FCB17528473D}.Release|ARM64.Build.0 = Release|ARM64
 		{69B0E0D9-22F0-4A25-8A27-FCB17528473D}.Release|ARM64.Deploy.0 = Release|ARM64
+
+		{30CADFC7-80EF-4296-A405-47E4B97C0C71}.Debug|x64.ActiveCfg = Debug|x64
+		{30CADFC7-80EF-4296-A405-47E4B97C0C71}.Debug|x64.Build.0 = Debug|x64
+		{30CADFC7-80EF-4296-A405-47E4B97C0C71}.Debug|x86.ActiveCfg = Debug|Win32
+		{30CADFC7-80EF-4296-A405-47E4B97C0C71}.Debug|x86.Build.0 = Debug|Win32
+		{30CADFC7-80EF-4296-A405-47E4B97C0C71}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{30CADFC7-80EF-4296-A405-47E4B97C0C71}.Debug|ARM64.Build.0 = Debug|ARM64
+		{30CADFC7-80EF-4296-A405-47E4B97C0C71}.Release|x64.ActiveCfg = Release|x64
+		{30CADFC7-80EF-4296-A405-47E4B97C0C71}.Release|x64.Build.0 = Release|x64
+		{30CADFC7-80EF-4296-A405-47E4B97C0C71}.Release|x86.ActiveCfg = Release|Win32
+		{30CADFC7-80EF-4296-A405-47E4B97C0C71}.Release|x86.Build.0 = Release|Win32
+		{30CADFC7-80EF-4296-A405-47E4B97C0C71}.Release|ARM64.ActiveCfg = Release|ARM64
+		{30CADFC7-80EF-4296-A405-47E4B97C0C71}.Release|ARM64.Build.0 = Release|ARM64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

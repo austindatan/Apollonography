@@ -26,8 +26,11 @@ package-lock.json.backup
 windows/.vs/
 windows/**/.vs/
 windows/[Xx]64/
+windows/**/[Xx]64/
 windows/[Xx]86/
+windows/**/[Xx]86/
 windows/[Aa][Rr][Mm]*/
+windows/**/[Aa][Rr][Mm]*/
 windows/**/[Bb]in/
 windows/**/[Oo]bj/
 windows/**/[Dd]ebug*/
@@ -65,6 +68,7 @@ windows/**/ipch/
 *.opendb
 *.unsuccessfulbuild
 Ankh.NoLoad
+TestResults/
 
 # -----------------------------------------------------------------------------
 # Android
@@ -145,6 +149,27 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+*.log
+
+# -----------------------------------------------------------------------------
+# Staging, Scratch & Local Backups
+# -----------------------------------------------------------------------------
+_to_delete/
+scratch/
+*.backup
+*.backup.*
+*.bak
+*.orig
+
+# -----------------------------------------------------------------------------
+# Local Databases & State
+# -----------------------------------------------------------------------------
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+state/
 
 # -----------------------------------------------------------------------------
 # Editor / IDE Config

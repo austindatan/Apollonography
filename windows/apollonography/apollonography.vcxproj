@@ -101,12 +101,21 @@
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
     <ClInclude Include="apollonography.h" />
+    <ClInclude Include="FilePickerModule.h" />
+    <ClInclude Include="SQLiteModule.h" />
+    <ClInclude Include="sqlite3.h" />
+    <ClInclude Include="sqlite3ext.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="AutolinkedNativeModules.g.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="sqlite3.c">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <CompileAs>CompileAsC</CompileAs>
+      <PreprocessorDefinitions>SQLITE_ENABLE_FTS5=1;SQLITE_ENABLE_JSON1=1;SQLITE_ENABLE_RTREE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
     <ClCompile Include="apollonography.cpp" />
     <ClCompile Include="AutolinkedNativeModules.g.cpp" />
     <ClCompile Include="pch.cpp">
@@ -122,8 +131,35 @@
     <ResourceCompile Include="apollonography.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="apollonography.ico" />
-    <Image Include="small.ico" />
+    <Image Include="apollonography.ico">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="small.ico">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Fonts\DMSans-Regular.otf">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="Assets\Fonts\DMSans-Medium.otf">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="Assets\Fonts\DMSans-Bold.otf">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="Assets\Fonts\DMSans-Italic.otf">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="Assets\Fonts\DMSans-MediumItalic.otf">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="Assets\Fonts\DMSans-BoldItalic.otf">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="Assets\Fonts\SpaceGrotesk-Bold.ttf">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ReactNativeWindowsTargets">

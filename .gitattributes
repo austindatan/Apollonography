@@ -1,0 +1,25 @@
+# Auto-detect text files and normalize line endings
+* text=auto
+
+# Windows project files require CRLF
+*.sln text eol=crlf
+*.vcxproj text eol=crlf
+*.vcxproj.filters text eol=crlf
+*.props text eol=crlf
+*.targets text eol=crlf
+*.appxmanifest text eol=crlf
+*.wapproj text eol=crlf
+*.rc text eol=crlf
+
+# Explicit binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.otf binary
+*.ttf binary
+*.pfx binary
+*.cer binary
+*.key binary
+*.sqlite binary
+*.db binary

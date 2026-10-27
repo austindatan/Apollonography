@@ -1,45 +1,31 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
+ * Apollonography — Worldbuilding & Storytelling Notes
+ * React Native for Windows (C++ template), UI-only.
  *
- * @format
+ * ► Fonts: DM Sans OTF files must be placed in
+ *   windows/apollonography/Assets/Fonts/ and declared in the vcxproj.
+ *   Until then, the system falls back to Segoe UI.
+ *   See WindowsCompat.md for full instructions.
+ *
+ * ► Developer Mode deploy error: Run `npm run windows` from an
+ *   Administrator PowerShell prompt (right-click → Run as administrator).
  */
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
-
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-
+import './global.css';
+import React from 'react';
+import { StatusBar, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { LightboxProvider } from './src/context/LightboxContext';
+import { MainScreen } from './src/screens/MainScreen';
+export default function App() {
   return (
     <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <LightboxProvider>
+        <View className="flex-1 bg-neutral-100">
+          <MainScreen />
+        </View>
+      </LightboxProvider>
     </SafeAreaProvider>
   );
 }
-
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
-
-export default App;

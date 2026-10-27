@@ -12,6 +12,7 @@
   ],
   "exclude": [
     "**/node_modules",
-    "**/Pods"
+    "**/Pods",
+    "_to_delete"
   ]
 }
