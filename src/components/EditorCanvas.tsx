@@ -63,6 +63,7 @@ import {
   isAttributeOptionInUse,
   clearAttributeFromEntries,
   saveAttributeOption,
+  deleteAttributeOptionFromDb,
 } from '../hooks/useAttributes';
 import { getStorageAdapter } from '../db/database';
 
@@ -304,38 +305,52 @@ export const EditorCanvas: React.FC<Props> = ({
     }
   };
 
-  const handleRenameAttributeOption = (type: AttributeType, id: string, newName: string, newColor?: string) => {
-    const { updatedProject, updatedOption } = renameAttributeOption(project, type, id, newName, newColor, allEntries);
-    onUpdateProject?.(updatedProject);
-    if (type === 'class') { setHeroClass(updatedOption.name); syncInfoField('class', updatedOption.name); }
-    else if (type === 'element') { setHeroElement(updatedOption.name); syncInfoField('element', updatedOption.name); }
-    else if (type === 'rarity') { setHeroRarity(updatedOption.name); syncInfoField('rarity', updatedOption.name); }
-    else if (type === 'series') { setGameplaySeries(updatedOption.name); syncInfoField('series', updatedOption.name); }
+  const handleRenameAttributeOption = async (type: AttributeType, id: string, newName: string, newColor?: string) => {
+    try {
+      const { updatedProject, updatedOption } = renameAttributeOption(project, type, id, newName, newColor, allEntries);
+      if (updatedOption) {
+        await saveAttributeOption(project.id, updatedOption, type);
+        onUpdateProject?.(updatedProject);
+        if (type === 'class') { setHeroClass(updatedOption.name); syncInfoField('class', updatedOption.name); }
+        else if (type === 'element') { setHeroElement(updatedOption.name); syncInfoField('element', updatedOption.name); }
+        else if (type === 'rarity') { setHeroRarity(updatedOption.name); syncInfoField('rarity', updatedOption.name); }
+        else if (type === 'series') { setGameplaySeries(updatedOption.name); syncInfoField('series', updatedOption.name); }
+      }
+    } catch (err) {
+      console.warn('[EditorCanvas] Failed to persist renamed attribute:', err);
+    }
   };
 
-  const handleDeleteAttributeOption = (type: AttributeType, id: string) => {
-    const targetOption = getProjectAttributeOptions(project, type, allEntries).find(o => o.id === id);
-    if (!targetOption) return;
+  const handleDeleteAttributeOption = async (type: AttributeType, id: string) => {
+    try {
+      const targetOption = getProjectAttributeOptions(project, type, allEntries).find(
+        o => o.id === id || o.id.toLowerCase() === id.toLowerCase() || o.name.toLowerCase() === id.toLowerCase()
+      );
+      if (!targetOption) return;
 
-    const { updatedProject } = deleteAttributeOption(project, type, id, allEntries);
-    onUpdateProject?.(updatedProject);
+      await deleteAttributeOptionFromDb(project.id, targetOption.id);
+      const { updatedProject } = deleteAttributeOption(project, type, id, allEntries);
+      onUpdateProject?.(updatedProject);
 
-    if (allEntries && Array.isArray(allEntries)) {
-      clearAttributeFromEntries(allEntries, type, targetOption);
-    }
+      if (allEntries && Array.isArray(allEntries)) {
+        clearAttributeFromEntries(allEntries, type, targetOption);
+      }
 
-    if (type === 'class' && (heroClass === id || heroClass.toLowerCase() === targetOption.name.toLowerCase())) {
-      setHeroClass('');
-      syncInfoField('class', '');
-    } else if (type === 'element' && (heroElement === id || heroElement.toLowerCase() === targetOption.name.toLowerCase())) {
-      setHeroElement('');
-      syncInfoField('element', '');
-    } else if (type === 'rarity' && (heroRarity === id || heroRarity.toLowerCase() === targetOption.name.toLowerCase())) {
-      setHeroRarity('');
-      syncInfoField('rarity', '');
-    } else if (type === 'series' && (gameplaySeries === id || gameplaySeries.toLowerCase() === targetOption.name.toLowerCase())) {
-      setGameplaySeries('');
-      syncInfoField('series', '');
+      if (type === 'class' && (heroClass === id || heroClass.toLowerCase() === targetOption.name.toLowerCase())) {
+        setHeroClass('');
+        syncInfoField('class', '');
+      } else if (type === 'element' && (heroElement === id || heroElement.toLowerCase() === targetOption.name.toLowerCase())) {
+        setHeroElement('');
+        syncInfoField('element', '');
+      } else if (type === 'rarity' && (heroRarity === id || heroRarity.toLowerCase() === targetOption.name.toLowerCase())) {
+        setHeroRarity('');
+        syncInfoField('rarity', '');
+      } else if (type === 'series' && (gameplaySeries === id || gameplaySeries.toLowerCase() === targetOption.name.toLowerCase())) {
+        setGameplaySeries('');
+        syncInfoField('series', '');
+      }
+    } catch (err) {
+      console.warn('[EditorCanvas] Failed to delete attribute option:', err);
     }
   };
 

@@ -56,23 +56,24 @@ export function getProjectAttributeOptions(
 ): AttributeOption[] {
   const map = new Map<string, AttributeOption>();
 
-  // 1. Load base defaults for this type (universal rarity scale)
-  let defaults: AttributeOption[] = [];
-  if (type === 'rarity') {
-    defaults = DEFAULT_RARITY_OPTIONS;
-  }
-
-  defaults.forEach(opt => map.set(opt.id, { ...opt }));
-
-  // 2. Load project-saved options (which override defaults if same ID)
-  if (type === 'class' && project.classOptions) {
-    project.classOptions.forEach(opt => map.set(opt.id, { ...opt }));
-  } else if (type === 'element' && project.elementOptions) {
+  // 1. If project has explicit saved options in DB, use them as primary source of truth
+  if (type === 'element' && project.elementOptions && project.elementOptions.length > 0) {
     project.elementOptions.forEach(opt => map.set(opt.id, { ...opt }));
-  } else if (type === 'rarity' && project.rarityOptions) {
+  } else if (type === 'class' && project.classOptions && project.classOptions.length > 0) {
+    project.classOptions.forEach(opt => map.set(opt.id, { ...opt }));
+  } else if (type === 'rarity' && project.rarityOptions && project.rarityOptions.length > 0) {
     project.rarityOptions.forEach(opt => map.set(opt.id, { ...opt }));
-  } else if (type === 'series' && project.seriesOptions) {
+  } else if (type === 'series' && project.seriesOptions && project.seriesOptions.length > 0) {
     project.seriesOptions.forEach(opt => map.set(opt.id, { ...opt }));
+  } else {
+    // Fall back to defaults only if nothing configured in DB yet
+    let defaults: AttributeOption[] = [];
+    if (type === 'rarity') {
+      defaults = DEFAULT_RARITY_OPTIONS;
+    } else if (type === 'element') {
+      defaults = DEFAULT_ELEMENT_OPTIONS;
+    }
+    defaults.forEach(opt => map.set(opt.id, { ...opt }));
   }
 
   // 3. Discover any values already used by entries in this project
@@ -99,7 +100,7 @@ export function getProjectAttributeOptions(
           o => o.id === trimmed || o.name.toLowerCase() === trimmed.toLowerCase()
         );
         if (!exists) {
-          const autoId = `${type}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+          const autoId = `${type}-${trimmed.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
           map.set(autoId, {
             id: autoId,
             name: trimmed,
@@ -119,7 +120,7 @@ export function getProjectAttributeOptions(
               o => o.id === trimmed || o.name.toLowerCase() === trimmed.toLowerCase()
             );
             if (!exists) {
-              const autoId = `${type}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+              const autoId = `${type}-${trimmed.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
               map.set(autoId, {
                 id: autoId,
                 name: trimmed,
@@ -170,24 +171,39 @@ export function renameAttributeOption(
   allEntries?: Entry[]
 ): { updatedProject: Project; updatedOption: AttributeOption } {
   const currentOptions = getProjectAttributeOptions(project, type, allEntries);
-  const nextOptions = currentOptions.map(opt => {
-    if (opt.id === id) {
-      return {
-        ...opt,
-        name: newName.trim(),
-        color: type === 'element' ? (newColor ?? opt.color ?? '#4ECDC4') : (newColor ?? opt.color),
-      };
-    }
-    return opt;
-  });
+  const targetId = (id || '').trim().toLowerCase();
+  const targetName = (newName || '').trim();
 
-  const updatedOption = nextOptions.find(o => o.id === id)!;
+  // Match by exact ID, case-insensitive ID, or case-insensitive name
+  const targetIndex = currentOptions.findIndex(
+    o => o.id === id || o.id.toLowerCase() === targetId || o.name.toLowerCase() === targetId
+  );
+
+  let updatedOption: AttributeOption;
+
+  if (targetIndex >= 0) {
+    const existing = currentOptions[targetIndex];
+    updatedOption = {
+      ...existing,
+      name: targetName || existing.name,
+      color: type === 'element' ? (newColor ?? existing.color ?? '#4ECDC4') : (newColor ?? existing.color),
+    };
+    currentOptions[targetIndex] = updatedOption;
+  } else {
+    updatedOption = {
+      id: id || `${type}-${targetName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+      name: targetName || id,
+      color: type === 'element' ? (newColor || '#4ECDC4') : newColor,
+    };
+    currentOptions.push(updatedOption);
+  }
+
   const updatedProject = { ...project };
 
-  if (type === 'class') updatedProject.classOptions = nextOptions;
-  else if (type === 'element') updatedProject.elementOptions = nextOptions as ElementOption[];
-  else if (type === 'rarity') updatedProject.rarityOptions = nextOptions;
-  else if (type === 'series') updatedProject.seriesOptions = nextOptions;
+  if (type === 'class') updatedProject.classOptions = currentOptions;
+  else if (type === 'element') updatedProject.elementOptions = currentOptions as ElementOption[];
+  else if (type === 'rarity') updatedProject.rarityOptions = currentOptions;
+  else if (type === 'series') updatedProject.seriesOptions = currentOptions;
 
   return { updatedProject, updatedOption };
 }
@@ -199,7 +215,10 @@ export function deleteAttributeOption(
   allEntries?: Entry[]
 ): { updatedProject: Project } {
   const currentOptions = getProjectAttributeOptions(project, type, allEntries);
-  const nextOptions = currentOptions.filter(opt => opt.id !== id);
+  const targetId = (id || '').trim().toLowerCase();
+  const nextOptions = currentOptions.filter(
+    opt => opt.id !== id && opt.id.toLowerCase() !== targetId && opt.name.toLowerCase() !== targetId
+  );
 
   const updatedProject = { ...project };
   if (type === 'class') updatedProject.classOptions = nextOptions;

@@ -27,12 +27,14 @@ import {
   WHITE,
   YELLOW,
 } from '../theme/brutal';
-import type { Entry, Project } from '../types/models';
+import type { Entry, Project, AttributeOption } from '../types/models';
 import BrutalBox from './brutal/BrutalBox';
 import BrutalButton from './brutal/BrutalButton';
 import BrutalDivider from './brutal/BrutalDivider';
 import BrutalPill from './brutal/BrutalPill';
 import { EntryGalleryCard } from './EntryGalleryCard';
+import { ElementFilter, entryMatchesElement } from './ElementFilter';
+import { getProjectAttributeOptions } from '../hooks/useAttributes';
 import { Icon, ICONS } from './Icon';
 import { TagPill } from './TagPill';
 import { AlignedSeriesLogo } from './AlignedSeriesLogo';
@@ -87,6 +89,18 @@ export const SeriesShowcaseCanvas: React.FC<Props> = ({
     typeof series.logo === 'string'
       ? { uri: series.logo }
       : series.logo;
+
+  const [selectedElementOption, setSelectedElementOption] = React.useState<AttributeOption | null>(null);
+
+  const elementOptions = React.useMemo(
+    () => getProjectAttributeOptions(project, 'element', series.entries),
+    [project, series.entries]
+  );
+
+  const filteredUnits = React.useMemo(() => {
+    if (!selectedElementOption) return series.entries;
+    return series.entries.filter(unit => entryMatchesElement(unit, selectedElementOption));
+  }, [series.entries, selectedElementOption]);
 
 
 
@@ -305,16 +319,35 @@ export const SeriesShowcaseCanvas: React.FC<Props> = ({
             )}
           </View>
 
-          {/* Units Grid */}
-          <View className="mb-3">
-            <Text className="font-display text-[15px] font-extrabold text-ink tracking-wider uppercase">FEATURED UNITS IN THIS {isCosmetics ? 'COLLECTION' : 'SERIES'}</Text>
-            <Text className="font-body text-[11px] text-neutral-500 mt-0.5">
-              Tap any unit to open full character editor
-            </Text>
+          {/* Units Grid Header with Element Filter */}
+          <View className="flex-row items-center justify-between mb-3">
+            <View>
+              <Text className="font-display text-[15px] font-extrabold text-ink tracking-wider uppercase">
+                FEATURED UNITS IN THIS {isCosmetics ? 'COLLECTION' : 'SERIES'}
+              </Text>
+              <Text className="font-body text-[11px] text-neutral-500 mt-0.5">
+                Tap any unit to open full character editor
+              </Text>
+            </View>
+
+            {elementOptions.length > 0 && (
+              <ElementFilter
+                options={elementOptions}
+                selectedOptionId={selectedElementOption?.id ?? null}
+                onSelectOption={setSelectedElementOption}
+              />
+            )}
           </View>
 
           <View className="flex-row flex-wrap gap-3 pt-2">
-            {series.entries.map(unit => {
+            {filteredUnits.length === 0 ? (
+              <View className="py-8 px-4 items-center w-full">
+                <Text className="font-display text-[12px] font-bold text-neutral-400">
+                  NO UNITS MATCH THIS ELEMENT
+                </Text>
+              </View>
+            ) : (
+              filteredUnits.map(unit => {
               const matchingWardrobe = (unit as any).wardrobes?.find(
                 (w: any) =>
                   w.seriesName &&
@@ -338,8 +371,9 @@ export const SeriesShowcaseCanvas: React.FC<Props> = ({
                   onPress={() => onSelectUnit(unit)}
                 />
               );
-            })}
-          </View>
+            })
+          )}
+        </View>
         </ScrollView>
       </BrutalBox>
     </View>

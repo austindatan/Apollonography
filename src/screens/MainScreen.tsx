@@ -32,6 +32,9 @@ import { CategoryChip } from '../components/CategoryChip';
 import { ChapterData, ChapterWriterCanvas } from '../components/ChapterWriterCanvas';
 import { EditorCanvas } from '../components/EditorCanvas';
 import { EntryGalleryCard } from '../components/EntryGalleryCard';
+import { ElementFilter, entryMatchesElement } from '../components/ElementFilter';
+import { getProjectAttributeOptions } from '../hooks/useAttributes';
+import type { AttributeOption } from '../types/models';
 import { EntryListCard } from '../components/EntryListCard';
 import { HomeDashboard } from '../components/HomeDashboard';
 import { Icon, ICONS } from '../components/Icon';
@@ -273,9 +276,9 @@ export const MainScreen: React.FC = () => {
     setIsProjectModalOpen(false);
   };
 
-  // Active view tab
   const [activeTab, setActiveTab] = useState<ViewMode>(initialPreset.defaultView);
   const [categoryId, setCategoryId] = useState<string>('all');
+  const [selectedElementOption, setSelectedElementOption] = useState<AttributeOption | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [showFilterDropdown, setShowFilterDropdown] = useState<boolean>(false);
 
@@ -291,6 +294,11 @@ export const MainScreen: React.FC = () => {
     );
 
   const dbAllEntries = useAllEntries();
+
+  const galleryElementOptions = useMemo(
+    () => (project ? getProjectAttributeOptions(project, 'element', currentProjectEntries) : []),
+    [project, currentProjectEntries]
+  );
 
   // All entries across all projects
   const allWorkspaceEntries = React.useMemo(() => {
@@ -1643,6 +1651,9 @@ export const MainScreen: React.FC = () => {
     if (!project) return null;
     const q = searchQuery.toLowerCase().trim();
     const displayedList = entries.filter(e => {
+      if (selectedElementOption && !entryMatchesElement(e, selectedElementOption)) {
+        return false;
+      }
       if (!q) return true;
       const titleMatch = (e.title || '').toLowerCase().includes(q);
       const summaryMatch = (e.summary || '').toLowerCase().includes(q);
@@ -1653,8 +1664,19 @@ export const MainScreen: React.FC = () => {
 
     return (
       <View className="flex-1 flex-col">
-        <View className="px-5 pt-3 pb-2">
-          {renderChips()}
+        <View className="flex-row items-center justify-between px-5 pt-3 pb-2">
+          <View className="flex-1 flex-row flex-wrap items-center">
+            {renderChips()}
+          </View>
+          {galleryElementOptions.length > 0 && (
+            <View className="ml-4 pl-3">
+              <ElementFilter
+                options={galleryElementOptions}
+                selectedOptionId={selectedElementOption?.id ?? null}
+                onSelectOption={setSelectedElementOption}
+              />
+            </View>
+          )}
         </View>
 
         <ScrollView
