@@ -8,7 +8,7 @@
   <em>A high-performance personal creative workspace, lore encyclopedia, character roster manager, and worldbuilding canvas for Windows.</em>
 </p>
 
-Built with **React Native Windows (v0.84)**, native **C++ SQLite TurboModule** (with WAL mode), **WebView2 / TipTap WYSIWYG editor**, and a custom **Neo-Brutalist design system**.
+Built with **React Native Windows (v0.84)**, native **C++ SQLite TurboModule** (with WAL mode), and **WebView2 / TipTap WYSIWYG editor**.
 
 ---
 
@@ -177,3 +177,12 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 
 ### 4. Database changes not showing in external DB viewer
 SQLite operates in WAL mode. Press **F5 (Refresh)** in DB Browser for SQLite to reload uncheckpointed WAL frames from `apollonography.db-wal`.
+
+---
+
+<p align="center">
+Thank You.
+</p>
+
+---
+
