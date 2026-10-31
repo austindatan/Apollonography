@@ -1,6 +1,12 @@
-# ✦ Apollonography
+<p align="center">
+  <img src="https://res.cloudinary.com/apollo-reverie/image/upload/v1793432049/banner_rm0ylt.png" alt="Repository Header" />
+</p>
 
-> **A high-performance personal creative workspace, lore encyclopedia, character roster manager, and worldbuilding canvas for Windows.**
+<h3 align="center">✦ Apollonography</h1>
+
+<p align="center">
+  <em>A high-performance personal creative workspace, lore encyclopedia, character roster manager, and worldbuilding canvas for Windows..</em>
+</p>
 
 Built with **React Native Windows (v0.84)**, native **C++ SQLite TurboModule** (with WAL mode), **WebView2 / TipTap WYSIWYG editor**, and a custom **Neo-Brutalist design system**.
 
