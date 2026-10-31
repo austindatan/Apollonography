@@ -6,7 +6,7 @@ Built with **React Native Windows (v0.84)**, native **C++ SQLite TurboModule** (
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 1. [Prerequisites & System Requirements](#1-prerequisites--system-requirements)
 2. [Visual Studio 2022 Installation Guide](#2-visual-studio-2022-installation-guide)
 3. [First-Time Repository Setup](#3-first-time-repository-setup)
@@ -142,7 +142,7 @@ You can safely delete any of the following folders at any time:
 - `windows/.vs/` *(Visual Studio temporary cache)*
 - `node_modules/` *(recreated anytime with `npm install`)*
 
-### ⚠️ NEVER Delete:
+### NEVER Delete:
 - `src/` *(your source code)*
 - `windows/apollonography/` (except `Generated Files/`)
 - `package.json`, `tsconfig.json`, `index.js`
